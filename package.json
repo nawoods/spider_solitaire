@@ -1,0 +1,14 @@
+{
+  "name": "spider_solitaire",
+  "version": "1.0.0",
+  "description": "Spider Solitaire",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Nick Woods",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^8.2.0"
+  }
+}

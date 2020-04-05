@@ -1,37 +1,41 @@
 import { Card } from './card.js';
+import { Deck } from './deck.js';
 
 class Game {
   CARD_WIDTH = 225;
   CARD_HEIGHT = 315;
 
+  suits = ['hearts', 'spades', 'diamonds', 'clubs'];
+  ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
   img = new Image();
 
-
-  deck = [
-    {
-      card: new Card('Q', 'diamonds'),
-      x: 200,
-      y: 40
-    },
-    {
-      card: new Card('A', 'spades'),
-      x: 60,
-      y: 100
-    },
-    {
-      card: new Card('7', 'diamonds'),
-      x: 250,
-      y: 200
-    }
-  ];
 
   constructor() {
     this.img.src = './assets/cardsprites.jpg';
     this.img.onload = () => this.renderCards();
 
-    this.addDragListener();
+    this.deck = new Deck(this.ranks, this.suits);
 
+    this.dealtCards = [
+      {
+        card: this.deck.dealCard(),
+        x: 200,
+        y: 40
+      },
+      {
+        card: this.deck.dealCard(),
+        x: 60,
+        y: 100
+      },
+      {
+        card: this.deck.dealCard(),
+        x: 250,
+        y: 200
+      }
+    ];
+
+    this.addDragListener();
   }
 
   renderCards() {
@@ -40,8 +44,7 @@ class Game {
       this.ctx = this.canvas.getContext('2d');
     }
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    console.log(this.deck);
-    this.deck.forEach(i => {
+    this.dealtCards.forEach(i => {
       i.card.render(i.x, i.y, this.ctx, this.img);
     })
   }
@@ -53,7 +56,7 @@ class Game {
     }
     this.canvas.onmousedown = (e) => {
       console.log(e);
-      this.deck.forEach(i => {
+      this.dealtCards.forEach(i => {
         if (e.x >= i.x && e.x < i.x + this.CARD_WIDTH &&
           e.y >= i.y && e.y < i.y + this.CARD_HEIGHT) {
           this.dragCard(i, e.x, e.y);

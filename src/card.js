@@ -13,25 +13,18 @@ class Card {
     this.rankIndex = ranks.indexOf(rank);
   }
 
-  render(dx, dy, ctx) {
-    const img = new Image();
-    img.src = './assets/cardsprites.jpg';
-
-    const draw = () => {
-      ctx.drawImage(
-        img,
-        this.rankIndex * this.CARD_WIDTH,
-        this.suitIndex * this.CARD_HEIGHT,
-        this.CARD_WIDTH,
-        this.CARD_HEIGHT,
-        dx,
-        dy,
-        this.CARD_WIDTH,
-        this.CARD_HEIGHT
-      );
-    };
-
-    img.onload = draw;
+  render(dx, dy, ctx, img) {
+    ctx.drawImage(
+      img,
+      this.rankIndex * this.CARD_WIDTH,
+      this.suitIndex * this.CARD_HEIGHT,
+      this.CARD_WIDTH,
+      this.CARD_HEIGHT,
+      dx,
+      dy,
+      this.CARD_WIDTH,
+      this.CARD_HEIGHT
+    );
   }
 
 

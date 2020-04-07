@@ -1,5 +1,5 @@
-import { Card } from './card.js';
 import { Deck } from './deck.js';
+import { TableauColumn } from './tableauColumn.js';
 
 class Game {
   CARD_WIDTH = 225;
@@ -12,30 +12,26 @@ class Game {
 
 
   constructor() {
+    this.canvas = document.querySelector('canvas');
+    this.ctx = this.canvas.getContext('2d');
     this.img.src = './assets/cardsprites.jpg';
-    this.img.onload = () => this.renderCards();
 
     this.deck = new Deck(this.ranks, this.suits);
 
-    this.dealtCards = [
-      {
-        card: this.deck.dealCard(),
-        x: 200,
-        y: 40
-      },
-      {
-        card: this.deck.dealCard(),
-        x: 60,
-        y: 100
-      },
-      {
-        card: this.deck.dealCard(),
-        x: 250,
-        y: 200
-      }
-    ];
+    this.column1 = new TableauColumn(100, 100, 60, this.ctx, this.img);
+    this.column2 = new TableauColumn(400, 100, 60, this.ctx, this.img);
+    for (let i = 0; i < 3; i++) {
+      this.column1.addCard(this.deck.dealCard());
+      this.column2.addCard(this.deck.dealCard());
+    }
 
-    this.addDragListener();
+    this.columns = [this.column1, this.column2];
+
+    this.img.onload = () => this.renderCards();
+
+    // get rid of this
+    this.dealtCards = []
+    // this.addDragListener();
   }
 
   renderCards() {
@@ -44,8 +40,8 @@ class Game {
       this.ctx = this.canvas.getContext('2d');
     }
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.dealtCards.forEach(i => {
-      i.card.render(i.x, i.y, this.ctx, this.img);
+    this.columns.forEach(i => {
+      i.render();
     })
   }
 
@@ -89,5 +85,4 @@ class Game {
 
 document.addEventListener("DOMContentLoaded", function () {
   const game = new Game();
-  console.log(game.ctx);
-});
+})

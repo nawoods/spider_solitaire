@@ -19,10 +19,11 @@ class Game {
     this.deck = new Deck(this.ranks, this.suits);
 
     this.columns = [
-      new TableauColumn(100, 100, 60, this.ctx, this.img),
-      new TableauColumn(400, 100, 60, this.ctx, this.img)
+      new TableauColumn(100, 100, 60, this.ctx, this.img, this.CARD_HEIGHT),
+      new TableauColumn(400, 100, 60, this.ctx, this.img, this.CARD_HEIGHT),
+      new TableauColumn(700, 100, 60, this.ctx, this.img, this.CARD_HEIGHT)
     ];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       this.columns.forEach(column => column.addCard(this.deck.dealCard()));
     }
 
@@ -57,7 +58,7 @@ class Game {
       console.log(e);
       this.columns.forEach(column => {
         if (e.x > column.dx && e.x < column.dx + this.CARD_WIDTH) {
-          this.cardsBeingMoved = column.removeCards(1);
+          this.cardsBeingMoved = column.moveCardsFromStack(e.y);
           this.cardsBeingMoved.forEach(card => {
             this.dragCard(card, e.x, e.y);
           });

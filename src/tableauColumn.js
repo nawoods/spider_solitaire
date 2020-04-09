@@ -21,7 +21,13 @@ class TableauColumn {
   }
 
   removeCards(number) {
-    return this.cards.splice(-1 * number, number);
+    let returnVal;
+    if (number) {
+      returnVal = this.cards.splice(-1 * number, number);
+    } else {
+      returnVal = this.removeCards(1)[0];
+    }
+    return returnVal;
   }
 
   render() {

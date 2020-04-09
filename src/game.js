@@ -18,20 +18,20 @@ class Game {
 
     this.deck = new Deck(this.ranks, this.suits);
 
-    this.column1 = new TableauColumn(100, 100, 60, this.ctx, this.img);
-    this.column2 = new TableauColumn(400, 100, 60, this.ctx, this.img);
+    this.columns = [
+      new TableauColumn(100, 100, 60, this.ctx, this.img),
+      new TableauColumn(400, 100, 60, this.ctx, this.img)
+    ];
     for (let i = 0; i < 3; i++) {
-      this.column1.addCard(this.deck.dealCard());
-      this.column2.addCard(this.deck.dealCard());
+      this.columns.forEach(column => column.addCard(this.deck.dealCard()));
     }
-
-    this.columns = [this.column1, this.column2];
 
     this.img.onload = () => this.renderCards();
 
     // get rid of this
-    this.dealtCards = []
-    // this.addDragListener();
+    // this.dealtCards = []
+    this.cardsBeingMoved = [];
+    this.addDragListener();
   }
 
   renderCards() {
@@ -43,6 +43,9 @@ class Game {
     this.columns.forEach(i => {
       i.render();
     })
+    this.cardsBeingMoved.forEach(card => {
+      card.card.render(card.x, card.y, this.ctx, this.img);
+    });
   }
 
   addDragListener() {
@@ -52,12 +55,21 @@ class Game {
     }
     this.canvas.onmousedown = (e) => {
       console.log(e);
-      this.dealtCards.forEach(i => {
-        if (e.x >= i.x && e.x < i.x + this.CARD_WIDTH &&
-          e.y >= i.y && e.y < i.y + this.CARD_HEIGHT) {
-          this.dragCard(i, e.x, e.y);
+      this.columns.forEach(column => {
+        if (e.x > column.dx && e.x < column.dx + this.CARD_WIDTH) {
+          this.cardsBeingMoved = column.removeCards(1);
+          this.cardsBeingMoved.forEach(card => {
+            this.dragCard(card, e.x, e.y);
+          });
+          // this.renderCards();
         }
-      });
+      })
+      // this.dealtCards.forEach(i => {
+      //   if (e.x >= i.x && e.x < i.x + this.CARD_WIDTH &&
+      //     e.y >= i.y && e.y < i.y + this.CARD_HEIGHT) {
+      //     this.dragCard(i, e.x, e.y);
+      //   }
+      // });
     };
   }
 

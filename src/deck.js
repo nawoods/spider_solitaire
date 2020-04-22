@@ -2,9 +2,11 @@ import { Card } from './card.js';
 
 class Deck {
 
-  constructor(ranks, suits) {
-    this.suits = suits;
-    this.ranks = ranks;
+  constructor(gameConfig) {
+    this.gameConfig = gameConfig;
+
+    this.suits = gameConfig.suits;
+    this.ranks = gameConfig.ranks;
 
     this.cards = this.createDeck();
     this.shuffle();
@@ -14,7 +16,7 @@ class Deck {
     let newCards = [];
     this.suits.forEach(suit => {
       this.ranks.forEach(rank => {
-        newCards.push(new Card(rank, suit));
+        newCards.push(new Card(rank, suit, this.gameConfig));
       })
     })
     return newCards;

@@ -1,11 +1,10 @@
 class TableauColumn {
-  constructor(dx, dy, distanceBetweenCards, ctx, img, cardHeight) {
+  constructor(dx, dy, gameConfig) {
     this.dx = dx;
     this.dy = dy;
-    this.distanceBetweenCards = distanceBetweenCards;
-    this.ctx = ctx;
-    this.img = img;
-    this.cardHeight = cardHeight;
+    this.distanceBetweenCards = gameConfig.defaultDistanceBetweenCards;
+    this.cardHeight = gameConfig.cardHeight;
+    this.gameConfig = gameConfig;
     this.cards = [];
   }
 
@@ -27,7 +26,7 @@ class TableauColumn {
     }
 
     let numberOfCards;
-    const topOfLastCard = this.endOfStackYValue() - this.cardHeight;
+    const topOfLastCard = this.endOfStackYValue() - this.gameConfig.cardHeight;
     if (mousey > topOfLastCard) {
       numberOfCards = 1;
     } else {
@@ -42,7 +41,7 @@ class TableauColumn {
     if (number) {
       returnVal = this.cards.splice(-1 * number, number);
     } else {
-      returnVal = this.removeCards(1)[0];
+      returnVal = this.removeCards(1);
     }
     return returnVal;
   }
@@ -51,9 +50,7 @@ class TableauColumn {
     for (let i = 0; i < this.cards.length; i++) {
       this.cards[i].card.render(
         this.dx,
-        this.dy + i * this.distanceBetweenCards,
-        this.ctx,
-        this.img
+        this.dy + i * this.distanceBetweenCards
       );
     }
   }
@@ -62,7 +59,8 @@ class TableauColumn {
     if (this.cards.length === 0) {
       return this.dy;
     } else {
-      return this.dy + this.cardHeight + this.distanceBetweenCards * (this.cards.length - 1);
+      return this.dy + this.gameConfig.cardHeight + this.distanceBetweenCards 
+        * (this.cards.length - 1);
     }
   }
 }

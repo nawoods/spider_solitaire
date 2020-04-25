@@ -46,6 +46,11 @@ class TableauColumn {
     return returnVal;
   }
 
+  isValidMove(cardAndLoc) {
+    // const topOfLastCard = this.endOfStackYValue() - this.gameConfig.cardHeight;
+    return Math.abs(this.dx - cardAndLoc.x) < this.gameConfig.cardWidth / 3;
+  }
+
   render() {
     for (let i = 0; i < this.cards.length; i++) {
       this.cards[i].card.render(

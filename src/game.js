@@ -16,8 +16,6 @@ class Game {
       this.columns.forEach(column => column.addCard(this.deck.dealCard()));
     }
 
-    // get rid of this
-    // this.dealtCards = []
     this.cardsBeingMoved = [];
     this.addDragListener();
 
@@ -29,8 +27,8 @@ class Game {
     this.columns.forEach(i => {
       i.render();
     })
-    this.cardsBeingMoved.forEach(card => {
-      card.card.render(card.x, card.y);
+    this.cardsBeingMoved.forEach(cardWithLoc => {
+      cardWithLoc.card.render(cardWithLoc.x, cardWithLoc.y);
     });
   }
 
@@ -39,34 +37,41 @@ class Game {
       this.columns.forEach(column => {
         if (e.x > column.dx && e.x < column.dx + this.gameConfig.cardWidth) {
           this.cardsBeingMoved = column.moveCardsFromStack(e.y);
-          this.cardsBeingMoved.forEach(card => {
-            this.dragCard(card, e.x, e.y);
+          this.cardsBeingMoved.forEach(cardAndLoc => {
+            this.dragCard(column, cardAndLoc, e.x, e.y);
           });
-          // this.renderCards();
         }
       })
-      // this.dealtCards.forEach(i => {
-      //   if (e.x >= i.x && e.x < i.x + this.CARD_WIDTH &&
-      //     e.y >= i.y && e.y < i.y + this.CARD_HEIGHT) {
-      //     this.dragCard(i, e.x, e.y);
-      //   }
-      // });
     };
   }
 
-  dragCard(card, mousex, mousey) {
-    const offsetx = mousex - card.x;
-    const offsety = mousey - card.y;
+  dragCard(sourceColumn, cardAndLoc, mousex, mousey) {
+    const offsetx = mousex - cardAndLoc.x;
+    const offsety = mousey - cardAndLoc.y;
 
     const followWhileDragging = (e) => {
-      card.x = e.x - offsetx;
-      card.y = e.y - offsety;
+      cardAndLoc.x = e.x - offsetx;
+      cardAndLoc.y = e.y - offsety;
       this.renderCards();
     }
 
-    function stopFollowing(e) {
+    const stopFollowing = e => {
       document.removeEventListener('mousemove', followWhileDragging);
       document.removeEventListener('mouseup', stopFollowing);
+
+      this.columns.forEach(column => {
+        if (column.isValidMove(cardAndLoc)) {
+          column.addCards(...this.cardsBeingMoved.map(cardWithLoc => cardWithLoc.card));
+          this.cardsBeingMoved = [];
+        }
+      });
+
+      if (this.cardsBeingMoved.length > 0) {
+          sourceColumn.addCards(...this.cardsBeingMoved.map(cardWithLoc => cardWithLoc.card));
+          this.cardsBeingMoved = [];
+      }
+
+      this.renderCards();
     }
 
     document.addEventListener('mousemove', followWhileDragging);

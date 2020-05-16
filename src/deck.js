@@ -16,7 +16,7 @@ class Deck {
     let newCards = [];
     this.suits.forEach(suit => {
       this.ranks.forEach(rank => {
-        newCards.push(new Card(rank, suit, this.gameConfig));
+        newCards.push(new Card(rank, suit, false, this.gameConfig));
       })
     })
     return newCards;

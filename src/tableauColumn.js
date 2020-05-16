@@ -8,7 +8,11 @@ class TableauColumn {
     this.cards = [];
   }
 
-  addCard(newCard) {
+  addCard(newCard, faceUp) {
+    if (faceUp !== undefined) {
+      newCard.faceUp = faceUp;
+    }
+
     this.cards.push({
       card: newCard,
       x: this.dx,

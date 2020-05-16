@@ -1,14 +1,17 @@
 class Card {
-  constructor(rank, suit, gameConfig) {
+  constructor(rank, suit, faceUp, gameConfig) {
     this.rank = rank;
     this.suit = suit;
+    this.faceUp = faceUp;
     this.gameConfig = gameConfig;
   }
 
   render(dx, dy) {
+    const cardImg = this.faceUp ? this.gameConfig.cardImgs[this.suit][this.rank] : this.gameConfig.cardImgs.back;
+
     console.log(this.gameConfig.ctx);
     this.gameConfig.ctx.drawImage(
-      this.gameConfig.cardImgs[this.suit][this.rank],
+      cardImg,
       dx,
       dy,
       this.gameConfig.cardWidth,

@@ -12,8 +12,11 @@ class Game {
       new TableauColumn(400, 100, this.gameConfig),
       new TableauColumn(700, 100, this.gameConfig)
     ];
+    for (let i = 0; i < 2; i++) {
+      this.columns.forEach(column => column.addCard(this.deck.dealCard(), false));
+    }
     for (let i = 0; i < 5; i++) {
-      this.columns.forEach(column => column.addCard(this.deck.dealCard()));
+      this.columns.forEach(column => column.addCard(this.deck.dealCard(), true));
     }
 
     this.cardsBeingMoved = [];

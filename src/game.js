@@ -67,6 +67,7 @@ class Game {
         if (column.isValidMove(cardAndLoc)) {
           column.addCards(...this.cardsBeingMoved.map(cardWithLoc => cardWithLoc.card));
           this.cardsBeingMoved = [];
+          this.columns.forEach(i => i.flipTopCardIfFaceDown());
         }
       });
 

@@ -37,7 +37,12 @@ class TableauColumn {
       numberOfCards = 1 + Math.ceil((topOfLastCard - mousey) / this.distanceBetweenCards);
     }
 
-    return this.removeCards(numberOfCards);
+    console.log(this.cards[this.cards.length - numberOfCards]);
+    if (this.cards[this.cards.length - numberOfCards].card.faceUp) {
+      return this.removeCards(numberOfCards);
+    } else {
+      return [];
+    }
   }
 
   removeCards(number) {
@@ -61,6 +66,12 @@ class TableauColumn {
         this.dx,
         this.dy + i * this.distanceBetweenCards
       );
+    }
+  }
+
+  flipTopCardIfFaceDown() {
+    if (this.cards.length > 0) {
+      this.cards[this.cards.length - 1].card.faceUp = true;
     }
   }
 

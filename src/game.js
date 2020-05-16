@@ -23,7 +23,8 @@ class Game {
   }
 
   renderCards() {
-    this.gameConfig.ctx.clearRect(0, 0, this.gameConfig.canvas.width, this.gameConfig.canvas.height);
+    this.gameConfig.ctx.fillStyle = '#333';
+    this.gameConfig.ctx.fillRect(0, 0, this.gameConfig.canvas.width, this.gameConfig.canvas.height);
     this.columns.forEach(i => {
       i.render();
     })
@@ -80,18 +81,47 @@ class Game {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-  const img = new Image();
-  img.src = './assets/cardsprites.jpg';
+  let cardsLoaded = 0;
+  const onLoadCard = () => {
+    cardsLoaded++;
+    if (cardsLoaded == 53) {
+      startGame();
+    }
+  };
 
-  img.onload = () => new Game({
+  let cardImgs = {};
+  const cardsLoc = './assets/cards/';
+  const suits = ['H', 'S', 'D', 'C'];
+  const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'];
+  suits.forEach(suit => {
+    cardImgs[suit] = {};
+    ranks.forEach(rank => {
+      let img = new Image();
+      img.src = cardsLoc + rank + suit + '.svg';
+      img.onload = onLoadCard;
+      cardImgs[suit][rank] = img;
+    });
+  });
+
+  // load back of card
+  let img = new Image();
+  img.src = cardsLoc + '1B.svg';
+  img.onload = onLoadCard;
+  cardImgs.back = img;
+
+  const startGame = () => new Game({
     canvas: document.querySelector('canvas'),
     ctx: document.querySelector('canvas').getContext('2d'),
-    suits: ['hearts', 'spades', 'diamonds', 'clubs'],
-    ranks: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
-    spritesheetUri: './assets/cardsprites.jpg',
-    cardWidth: 225,
-    cardHeight: 315,
+    // suits: ['hearts', 'spades', 'diamonds', 'clubs'],
+    // ranks: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
+    // spritesheetUri: './assets/cardsprites.jpg',
+    suits,
+    ranks,
+    cardsLoc,
+    cardWidth: 200,
+    cardHeight: 280,
     defaultDistanceBetweenCards: 60,
-    img
+    //img
+    cardImgs
   });
 })

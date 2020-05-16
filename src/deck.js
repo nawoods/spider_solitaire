@@ -2,7 +2,9 @@ import { Card } from './card.js';
 
 class Deck {
 
-  constructor(gameConfig) {
+  constructor(x, y, gameConfig) { 
+    this.x = x;
+    this.y = y;
     this.gameConfig = gameConfig;
 
     this.suits = gameConfig.suits;
@@ -20,6 +22,17 @@ class Deck {
       })
     })
     return newCards;
+  }
+
+  render() {
+    console.log(this.gameConfig.cardImgs.back);
+    this.gameConfig.ctx.drawImage(
+      this.gameConfig.cardImgs.back,
+      this.x,
+      this.y,
+      this.gameConfig.cardWidth,
+      this.gameConfig.cardHeight
+    );
   }
 
   shuffle() {

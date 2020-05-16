@@ -5,19 +5,17 @@ class Game {
   constructor(gameConfig) {
     this.gameConfig = gameConfig;
 
-    this.deck = new Deck(this.gameConfig);
+    this.deck = new Deck(800, 800, this.gameConfig);
 
     this.columns = [
       new TableauColumn(100, 100, this.gameConfig),
       new TableauColumn(400, 100, this.gameConfig),
       new TableauColumn(700, 100, this.gameConfig)
     ];
-    for (let i = 0; i < 2; i++) {
-      this.columns.forEach(column => column.addCard(this.deck.dealCard(), false));
+    for (let i = 0; i < 7; i++) {
+      this.columns.forEach(column => column.addCard(this.deck.dealCard()));
     }
-    for (let i = 0; i < 5; i++) {
-      this.columns.forEach(column => column.addCard(this.deck.dealCard(), true));
-    }
+    this.columns.forEach(column => column.flipTopCardIfFaceDown());
 
     this.cardsBeingMoved = [];
     this.addDragListener();
@@ -34,6 +32,7 @@ class Game {
     this.cardsBeingMoved.forEach(cardWithLoc => {
       cardWithLoc.card.render(cardWithLoc.x, cardWithLoc.y);
     });
+    this.deck.render();
   }
 
   addDragListener() {
@@ -45,7 +44,12 @@ class Game {
             this.dragCard(column, cardAndLoc, e.x, e.y);
           });
         }
-      })
+      });
+
+      if (e.x > this.deck.x && e.x < this.deck.x + this.gameConfig.cardWidth &&
+          e.y > this.deck.y && e.y < this.deck.y + this.gameConfig.cardHeight) {
+        this.dealFromDeck();
+      }
     };
   }
 
@@ -82,6 +86,11 @@ class Game {
     document.addEventListener('mousemove', followWhileDragging);
     document.addEventListener('mouseup', stopFollowing);
   }
+
+  dealFromDeck() {
+    this.columns.forEach(column => column.addCard(this.deck.dealCard(), true));
+    this.renderCards();
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -116,15 +125,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const startGame = () => new Game({
     canvas: document.querySelector('canvas'),
     ctx: document.querySelector('canvas').getContext('2d'),
-    // suits: ['hearts', 'spades', 'diamonds', 'clubs'],
-    // ranks: ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'],
-    // spritesheetUri: './assets/cardsprites.jpg',
     suits,
     ranks,
     cardsLoc,
-    cardWidth: 200,
-    cardHeight: 280,
-    defaultDistanceBetweenCards: 60,
+    cardWidth: 100,
+    cardHeight: 140,
+    defaultDistanceBetweenCards: 30,
     //img
     cardImgs
   });

@@ -9,7 +9,6 @@ class Card {
   render(dx, dy) {
     const cardImg = this.faceUp ? this.gameConfig.cardImgs[this.suit][this.rank] : this.gameConfig.cardImgs.back;
 
-    console.log(this.gameConfig.ctx);
     this.gameConfig.ctx.drawImage(
       cardImg,
       dx,

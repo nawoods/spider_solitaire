@@ -99,7 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let cardsLoaded = 0;
   const onLoadCard = () => {
     cardsLoaded++;
-    if (cardsLoaded == 53) {
+    // 52 cards + back + empty column marker
+    if (cardsLoaded == 54) {
       startGame();
     }
   };
@@ -119,10 +120,16 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // load back of card
-  let img = new Image();
-  img.src = cardsLoc + '1B.svg';
-  img.onload = onLoadCard;
-  cardImgs.back = img;
+  let backImg = new Image();
+  backImg.src = cardsLoc + '1B.svg';
+  backImg.onload = onLoadCard;
+  cardImgs.back = backImg;
+
+  // load "blank" card to be used as empty column marker
+  let emptyImg = new Image();
+  emptyImg.src = cardsLoc + '2B.svg';
+  emptyImg.onload = onLoadCard;
+  cardImgs.empty = emptyImg;
 
   const startGame = () => new Game({
     canvas: document.querySelector('canvas'),

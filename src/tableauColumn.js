@@ -62,11 +62,11 @@ class TableauColumn {
     const rank = this.cards[firstCardMovedIndex].card.rank;
     const leadRankIndex = this.gameConfig.ranks.indexOf(rank);
 
-    for (let i=firstCardMovedIndex+1; i<this.cards.length; i++) {
+    for (let i = firstCardMovedIndex + 1; i < this.cards.length; i++) {
       let card = this.cards[i].card;
       console.log(this.gameConfig.ranks.indexOf(card.rank));
-      console.log(leadRankIndex+i-firstCardMovedIndex);
-      if (card.suit !== suit || this.gameConfig.ranks.indexOf(card.rank) !== leadRankIndex+i-firstCardMovedIndex) {
+      console.log(leadRankIndex + i - firstCardMovedIndex);
+      if (card.suit !== suit || this.gameConfig.ranks.indexOf(card.rank) !== leadRankIndex + i - firstCardMovedIndex) {
         return false;
       }
     }
@@ -80,7 +80,9 @@ class TableauColumn {
       return false;
     }
 
-    const lastCardInStack = this.cards[this.cards.length-1].card;
+    if (this.cards.length === 0) return true;
+
+    const lastCardInStack = this.cards[this.cards.length - 1].card;
     const lastCardInStackRankIndex = this.gameConfig.ranks.indexOf(lastCardInStack.rank);
     const movedCardRankIndex = this.gameConfig.ranks.indexOf(cardAndLoc.card.rank);
     return lastCardInStackRankIndex + 1 === movedCardRankIndex;
@@ -91,6 +93,16 @@ class TableauColumn {
       this.cards[i].card.render(
         this.dx,
         this.dy + i * this.distanceBetweenCards
+      );
+    }
+
+    if (this.cards.length === 0) {
+      this.gameConfig.ctx.drawImage(
+        this.gameConfig.cardImgs.empty,
+        this.dx,
+        this.dy,
+        this.gameConfig.cardWidth,
+        this.gameConfig.cardHeight
       );
     }
   }
@@ -105,7 +117,7 @@ class TableauColumn {
     if (this.cards.length === 0) {
       return this.dy;
     } else {
-      return this.dy + this.gameConfig.cardHeight + this.distanceBetweenCards 
+      return this.dy + this.gameConfig.cardHeight + this.distanceBetweenCards
         * (this.cards.length - 1);
     }
   }

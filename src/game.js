@@ -7,13 +7,15 @@ class Game {
 
     this.deck = new Deck(800, 800, this.gameConfig);
 
-    this.columns = [
-      new TableauColumn(100, 100, this.gameConfig),
-      new TableauColumn(400, 100, this.gameConfig),
-      new TableauColumn(700, 100, this.gameConfig)
-    ];
-    for (let i = 0; i < 7; i++) {
+    this.columns = [];
+    for (let i=0; i<10; i++) {
+      this.columns.push(new TableauColumn(20+i*110, 100, this.gameConfig));
+    }
+    for (let i=0; i<5; i++) {
       this.columns.forEach(column => column.addCard(this.deck.dealCard()));
+    }
+    for (let i=0; i<4; i++) {
+      this.columns[i].addCard(this.deck.dealCard());
     }
     this.columns.forEach(column => column.flipTopCardIfFaceDown());
 
@@ -68,7 +70,7 @@ class Game {
       document.removeEventListener('mouseup', stopFollowing);
 
       this.columns.forEach(column => {
-        if (column.isValidMove(cardAndLoc)) {
+        if (column.isLegalMoveToStack(cardAndLoc)) {
           column.addCards(...this.cardsBeingMoved.map(cardWithLoc => cardWithLoc.card));
           this.cardsBeingMoved = [];
           this.columns.forEach(i => i.flipTopCardIfFaceDown());
@@ -104,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   let cardImgs = {};
   const cardsLoc = './assets/cards/';
-  const suits = ['H', 'S', 'D', 'C'];
-  const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'];
+  const suits = ['H', 'H', 'S', 'S', 'D', 'D', 'C', 'C'];
+  const ranks = ['K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'A'];
   suits.forEach(suit => {
     cardImgs[suit] = {};
     ranks.forEach(rank => {

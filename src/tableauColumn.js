@@ -37,8 +37,7 @@ class TableauColumn {
       numberOfCards = 1 + Math.ceil((topOfLastCard - mousey) / this.distanceBetweenCards);
     }
 
-    console.log(this.cards[this.cards.length - numberOfCards]);
-    if (this.cards[this.cards.length - numberOfCards].card.faceUp) {
+    if (this.isLegalMoveFromStack(numberOfCards)) {
       return this.removeCards(numberOfCards);
     } else {
       return [];
@@ -55,9 +54,36 @@ class TableauColumn {
     return returnVal;
   }
 
-  isValidMove(cardAndLoc) {
-    // const topOfLastCard = this.endOfStackYValue() - this.gameConfig.cardHeight;
-    return Math.abs(this.dx - cardAndLoc.x) < this.gameConfig.cardWidth / 3;
+  isLegalMoveFromStack(numberOfCards) {
+    const firstCardMovedIndex = this.cards.length - numberOfCards;
+    if (!this.cards[firstCardMovedIndex].card.faceUp) return false;
+
+    const suit = this.cards[firstCardMovedIndex].card.suit;
+    const rank = this.cards[firstCardMovedIndex].card.rank;
+    const leadRankIndex = this.gameConfig.ranks.indexOf(rank);
+
+    for (let i=firstCardMovedIndex+1; i<this.cards.length; i++) {
+      let card = this.cards[i].card;
+      console.log(this.gameConfig.ranks.indexOf(card.rank));
+      console.log(leadRankIndex+i-firstCardMovedIndex);
+      if (card.suit !== suit || this.gameConfig.ranks.indexOf(card.rank) !== leadRankIndex+i-firstCardMovedIndex) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  isLegalMoveToStack(cardAndLoc) {
+    // check if location of card is close to stack
+    if (Math.abs(this.dx - cardAndLoc.x) > this.gameConfig.cardWidth / 3) {
+      return false;
+    }
+
+    const lastCardInStack = this.cards[this.cards.length-1].card;
+    const lastCardInStackRankIndex = this.gameConfig.ranks.indexOf(lastCardInStack.rank);
+    const movedCardRankIndex = this.gameConfig.ranks.indexOf(cardAndLoc.card.rank);
+    return lastCardInStackRankIndex + 1 === movedCardRankIndex;
   }
 
   render() {

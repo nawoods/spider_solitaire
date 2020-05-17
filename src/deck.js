@@ -25,7 +25,6 @@ class Deck {
   }
 
   render() {
-    console.log(this.gameConfig.cardImgs.back);
     this.gameConfig.ctx.drawImage(
       this.gameConfig.cardImgs.back,
       this.x,

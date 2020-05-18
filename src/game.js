@@ -90,8 +90,13 @@ class Game {
   }
 
   dealFromDeck() {
+    if (this.isOneColumnEmpty()) return;
     this.columns.forEach(column => column.addCard(this.deck.dealCard(), true));
     this.renderCards();
+  }
+
+  isOneColumnEmpty() {
+    return this.columns.reduce((acc, column) => acc || column.cards.length === 0, false);
   }
 }
 

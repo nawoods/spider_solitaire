@@ -22,6 +22,7 @@ class TableauColumn {
 
   addCards(...newCards) {
     newCards.forEach(i => this.addCard(i));
+    if (this.containsCompleteRun()) this.removeCards(13);
   }
 
   moveCardsFromStack(mousey) {
@@ -86,6 +87,18 @@ class TableauColumn {
     const lastCardInStackRankIndex = this.gameConfig.ranks.indexOf(lastCardInStack.rank);
     const movedCardRankIndex = this.gameConfig.ranks.indexOf(cardAndLoc.card.rank);
     return lastCardInStackRankIndex + 1 === movedCardRankIndex;
+  }
+
+  containsCompleteRun() {
+    const len = this.cards.length;
+    if (len < 13 || !this.cards[len - 13].card.faceUp) return false;
+    const suitOfRun = this.cards[len - 1].card.suit;
+    for (let i = 0; i < 13; i++) {
+      const cardBeingChecked = this.cards[len - 1 - i].card;
+      if (cardBeingChecked.suit !== suitOfRun) return false;
+      if (cardBeingChecked.rank !== this.gameConfig.ranks[12 - i]) return false;
+    }
+    return true;
   }
 
   render() {

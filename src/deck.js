@@ -25,8 +25,9 @@ class Deck {
   }
 
   render() {
+    const cardImg = this.cards.length > 0 ? "back" : "empty";
     this.gameConfig.ctx.drawImage(
-      this.gameConfig.cardImgs.back,
+      this.gameConfig.cardImgs[cardImg],
       this.x,
       this.y,
       this.gameConfig.cardWidth,
